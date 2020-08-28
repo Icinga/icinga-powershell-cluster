@@ -1,3 +1,7 @@
+<#########################################################################################################
+############################### lib/provider/clusterNetwork ##############################################
+#########################################################################################################>
+
 [hashtable]$ClusterNetState = @{
     -1 = 'Unknown';
     0  = 'Unavailable';
@@ -171,6 +175,48 @@
     'Not Applicable' = 4;
 }
 
+<##################################################################################################
+################# /lib/provider/networkVolumes ####################################################
+##################################################################################################>
+
+[hashtable]$RequiredDependencyClassesName = @{
+    0     = 'Unknown';
+    1     = 'Storage';
+    2     = 'Network';
+    32768 = 'User';
+}
+
+[hashtable]$RequiredDependencyClasses = @{
+    'Unknown' = 0;
+    'Storage' = 1;
+    'Network' = 2;
+    'User'    = 32768;
+}
+
+[hashtable]$ClusterServiceStateName = @{
+    -1  = 'Unknown';
+    0   = 'Inherited';
+    1   = 'Initializing';
+    2   = 'Online';
+    3   = 'Offline';
+    4   = 'Failed';
+    126 = 'ClusterResourceCannotComeOnlineOnAnyNode';
+    128 = 'Pending';
+    130 = 'Online Pending';
+}
+
+[hashtable]$ClusterServiceState = @{
+    'Unknown'                                  = -1;
+    'Inherited'                                = 0;
+    'Initializing'                             = 1;
+    'Online'                                   = 2;
+    'Offline'                                  = 3;
+    'Failed'                                   = 4;
+    'ClusterResourceCannotComeOnlineOnAnyNode' = 126;
+    'Pending'                                  = 128;
+    'Online Pending'                           = 130;
+}
+
 [hashtable]$ClusterProviderEnums = @{
     # /lib/provider/clusterNet
     ClusterNetRole                           = $ClusterNetRole;
@@ -185,6 +231,11 @@
     InterfacePowerManagementCapabilities     = $InterfacePowerManagementCapabilities;
     InterfacePowerManagementCapabilitiesName = $InterfacePowerManagementCapabilitiesName;
     ClusterInterfaceAvailabilityDebug        = $ClusterInterfaceAvailabilityDebug;
+    #/lib/provider/networkVolumes
+    RequiredDependencyClasses                = $RequiredDependencyClasses;
+    RequiredDependencyClassesName            = $RequiredDependencyClassesName;
+    ClusterServiceState                      = $ClusterServiceState;
+    ClusterServiceStateName                  = $ClusterServiceStateName;
 }
 
 Export-ModuleMember -Variable @('ClusterProviderEnums');
