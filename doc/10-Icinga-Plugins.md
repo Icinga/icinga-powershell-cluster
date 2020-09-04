@@ -16,3 +16,4 @@ To test thresholds with different input values, you can use the Framework Cmdlet
 
 * [Invoke-IcingaCheckClusterNetwork](plugins/01-Invoke-IcingaCheckClusterNetwork.md)
 * [Invoke-IcingaCheckSharedVolume](plugins/02-Invoke-IcingaCheckSharedVolume.md)
+* [Invoke-IcingaCheckClusterHealth](plugins/03-Invoke-IcingaCheckClusterHealth.md)
