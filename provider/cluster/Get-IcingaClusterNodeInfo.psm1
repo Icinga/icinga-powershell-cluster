@@ -74,7 +74,7 @@ function Get-IcingaClusterNodeInfo()
         if ($null -ne $node.Dedicated) {
             $Dedicated = @{ };
             foreach ($key in $node.Dedicated) {
-                Add-IcingaHashtableItem -Hashtable $Dedicated -Key ([int]$key) -Value ($ProviderEnums.ClusterNodeDedicated[[int]$key]) | Out-Null;
+                Add-IcingaHashtableItem -Hashtable $Dedicated -Key ([int]$key) -Value ($ClusterProviderEnums.ClusterNodeDedicated[[int]$key]) | Out-Null;
             }
 
             $NodeDetails.Dedicated = $Dedicated;
@@ -85,7 +85,7 @@ function Get-IcingaClusterNodeInfo()
         if ($null -ne $node.PowerManagementCapabilities) {
             $PowerManagementCapabilities = @{ };
             foreach ($capability in $node.PowerManagementCapabilities) {
-                Add-IcingaHashtableItem -Hashtable $PowerManagementCapabilities -Key ([int]$capability) -Value ($ProviderEnums.ClusterPowerManagementCapabilities[[int]$capability]) | Out-Null;
+                Add-IcingaHashtableItem -Hashtable $PowerManagementCapabilities -Key ([int]$capability) -Value ($ClusterProviderEnums.ClusterPowerManagementCapabilities[[int]$capability]) | Out-Null;
             }
 
             $NodeDetails.PowerManagementCapabilities = $PowerManagementCapabilities;

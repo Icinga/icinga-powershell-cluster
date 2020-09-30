@@ -19,7 +19,7 @@ function Invoke-IcingaCheckClusterNode()
                 New-IcingaCheck `
                     -Name ([string]::Format('#{0} StatusInformation', $node)) `
                     -Value $ClusterNode.StatusInformation `
-                    -Translation $ProviderEnums.ClusterNodeStatusInfo
+                    -Translation $ClusterProviderEnums.ClusterNodeStatusInfo
             )
         );
 
@@ -30,9 +30,9 @@ function Invoke-IcingaCheckClusterNode()
                     -Name ([string]::Format('#{0} Dedicated', $node)) `
                     -Value ([string]::Join(',', $ClusterNodeDedicated))
             ).WarnIfMatch(
-                $ProviderEnums.ClusterNodeDedicatedName.Unknown
+                $ClusterProviderEnums.ClusterNodeDedicatedName.Unknown
             ).CritIfMatch(
-                $ProviderEnums.ClusterNodeDedicatedName.'Not Dedicated'
+                $ClusterProviderEnums.ClusterNodeDedicatedName.'Not Dedicated'
             )
         );
 
@@ -41,9 +41,9 @@ function Invoke-IcingaCheckClusterNode()
                 New-IcingaCheck `
                     -Name ([string]::Format('#{0} NodeDrainStatus', $node)) `
                     -Value $ClusterNode.NodeDrainStatus `
-                    -Translation $ProviderEnums.NodeDrainStatus
+                    -Translation $ClusterProviderEnums.NodeDrainStatus
             ).CritIfMatch(
-                $ProviderEnums.NodeDrainStatusName.Failed
+                $ClusterProviderEnums.NodeDrainStatusName.Failed
             )
         );
 
@@ -52,13 +52,13 @@ function Invoke-IcingaCheckClusterNode()
                 New-IcingaCheck `
                     -Name ([string]::Format('#{0} State', $node)) `
                     -Value $ClusterNode.State `
-                    -Translation $ProviderEnums.ClusterNodeState `
+                    -Translation $ClusterProviderEnums.ClusterNodeState `
             ).WarnIfMatch(
-                $ProviderEnums.ClusterNodeStateName.Unknown
+                $ClusterProviderEnums.ClusterNodeStateName.Unknown
             ).CritIfMatch(
-                $ProviderEnums.ClusterNodeStateName.Down
+                $ClusterProviderEnums.ClusterNodeStateName.Down
             ).CritIfMatch(
-                $ProviderEnums.ClusterNodeStateName.Paused
+                $ClusterProviderEnums.ClusterNodeStateName.Paused
             )
         );
 
