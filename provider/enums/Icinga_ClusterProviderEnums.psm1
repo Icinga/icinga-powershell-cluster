@@ -1,5 +1,5 @@
 <##################################################################################################
-################# /lib/provider/culster ###########################################################
+################# /lib/provider/culsterNodes ######################################################
 ##################################################################################################>
 
 [hashtable]$ClusterNodeDedicated = @{
@@ -58,10 +58,44 @@
     'Timed Power On Supported'                 = 7;
 }
 
+[hashtable]$ClusterNodeState = @{
+    0 = 'Up';
+    1 = 'Down';
+    2 = 'Paused';
+    3 = 'Joining';
+}
+
+[hashtable]$ClusterNodeStateName = @{
+    'Up'      = 0;
+    'Down'    = 1;
+    'Paused'  = 2;
+    'Joining' = 3;
+}
+
+[hashtable]$ClusterNodeDrainStatus = @{
+    0 = 'Not Initiated';
+    1 = 'In Progress';
+    2 = 'Completed';
+    3 = 'Failed';
+}
+
+[hashtable]$ClusterNodeDrainStatusName = @{
+    'Not Initiated' = 0;
+    'In Progress'   = 1;
+    'Completed'     = 2;
+    'Failed'        = 3;
+}
+
 [hashtable]$ClusterProviderEnums = @{
-    #/lib/provider/cluster
-    ClusterNodeDedicated           = $ClusterNodeDedicated;
-    ClusterNodeDedicatedName       = $ClusterNodeDedicatedName; 
+    #/lib/provider/clusterNodes
+    ClusterNodeState                       = $ClusterNodeState;
+    ClusterNodeStateName                   = $ClusterNodeStateName;
+    ClusterNodeDedicated                   = $ClusterNodeDedicated;
+    ClusterNodeDedicatedName               = $ClusterNodeDedicatedName;
+    ClusterNodeDrainStatus                 = $ClusterNodeDrainStatus;
+    ClusterNodeDrainStatusName             = $ClusterNodeDrainStatusName; 
+    ClusterPowerManagementCapabilities     = $ClusterPowerManagementCapabilities;
+    ClusterPowerManagementCapabilitiesName = $ClusterPowerManagementCapabilitiesName;
 }
 
 Export-ModuleMember -Variable @('ClusterProviderEnums');

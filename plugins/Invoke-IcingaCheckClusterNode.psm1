@@ -14,14 +14,6 @@ function Invoke-IcingaCheckClusterNode()
     foreach ($node in $GetClusterNodes.Keys) {
         $ClusterNode      = $GetClusterNodes[$node];
         $NodeCheckPackage = New-IcingaCheckPackage -Name ([string]::Format('Node {0}', $ClusterNode.Name)) -OperatorAnd -Verbose $Verbosity;
-        $NodeCheckPackage.AddCheck(
-            (
-                New-IcingaCheck `
-                    -Name ([string]::Format('#{0} StatusInformation', $node)) `
-                    -Value $ClusterNode.StatusInformation `
-                    -Translation $ClusterProviderEnums.ClusterNodeStatusInfo
-            )
-        );
 
         [array]$ClusterNodeDedicated = $ClusterNode.Dedicated.Values;
         $NodeCheckPackage.AddCheck(
@@ -41,9 +33,9 @@ function Invoke-IcingaCheckClusterNode()
                 New-IcingaCheck `
                     -Name ([string]::Format('#{0} NodeDrainStatus', $node)) `
                     -Value $ClusterNode.NodeDrainStatus `
-                    -Translation $ClusterProviderEnums.NodeDrainStatus
+                    -Translation $ClusterProviderEnums.ClusterNodeDrainStatus
             ).CritIfMatch(
-                $ClusterProviderEnums.NodeDrainStatusName.Failed
+                $ClusterProviderEnums.ClusterNodeDrainStatusName.Failed
             )
         );
 
@@ -59,16 +51,6 @@ function Invoke-IcingaCheckClusterNode()
                 $ClusterProviderEnums.ClusterNodeStateName.Down
             ).CritIfMatch(
                 $ClusterProviderEnums.ClusterNodeStateName.Paused
-            )
-        );
-
-        $NodeCheckPackage.AddCheck(
-            (
-                New-IcingaCheck `
-                    -Name ([string]::Format('#{0} NodeWeight', $node)) `
-                    -Value $ClusterNode.NodeWeight
-            ).WarnIfMatch(
-                0
             )
         );
 
