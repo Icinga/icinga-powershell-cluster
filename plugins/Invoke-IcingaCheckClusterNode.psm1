@@ -15,6 +15,17 @@ function Invoke-IcingaCheckClusterNode()
         $ClusterNode      = $GetClusterNodes[$node];
         $NodeCheckPackage = New-IcingaCheckPackage -Name ([string]::Format('Node {0}', $ClusterNode.Name)) -OperatorAnd -Verbose $Verbosity;
 
+        $NodeCheckPackage.AddCheck(
+            (
+                New-IcingaCheck `
+                    -Name ([string]::Format('#{0} Status Information', $node)) `
+                    -Value $ClusterNode.StatusInformation `
+                    -Translation $ClusterProviderEnums.ClusterNodeStatusInfo
+            ).CritIfMatch(
+                $ClusterProviderEnums.ClusterNodeStatusInfoName.Quarantined
+            )
+        );
+
         [array]$ClusterNodeDedicated = $ClusterNode.Dedicated.Values;
         $NodeCheckPackage.AddCheck(
             (

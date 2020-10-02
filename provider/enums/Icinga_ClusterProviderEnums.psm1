@@ -59,13 +59,15 @@
 }
 
 [hashtable]$ClusterNodeState = @{
-    0 = 'Up';
-    1 = 'Down';
-    2 = 'Paused';
-    3 = 'Joining';
+    -1 = 'Unknown';
+    0  = 'Up';
+    1  = 'Down';
+    2  = 'Paused';
+    3  = 'Joining';
 }
 
 [hashtable]$ClusterNodeStateName = @{
+    'Unknown' = -1;
     'Up'      = 0;
     'Down'    = 1;
     'Paused'  = 2;
@@ -86,11 +88,25 @@
     'Failed'        = 3;
 }
 
+[hashtable]$ClusterNodeStatusInfo = @{
+    0 = 'Normal';
+    1 = 'Isolated';
+    2 = 'Quarantined';
+}
+
+[hashtable]$ClusterNodeStatusInfoName = @{
+    'Normal'      = 0;
+    'Isolated'    = 1;
+    'Quarantined' = 2;
+}
+
 [hashtable]$ClusterProviderEnums = @{
     #/lib/provider/clusterNodes
     ClusterNodeState                       = $ClusterNodeState;
     ClusterNodeStateName                   = $ClusterNodeStateName;
     ClusterNodeDedicated                   = $ClusterNodeDedicated;
+    ClusterNodeStatusInfo                  = $ClusterNodeStatusInfo;
+    ClusterNodeStatusInfoName              = $ClusterNodeStatusInfoName;
     ClusterNodeDedicatedName               = $ClusterNodeDedicatedName;
     ClusterNodeDrainStatus                 = $ClusterNodeDrainStatus;
     ClusterNodeDrainStatusName             = $ClusterNodeDrainStatusName; 
