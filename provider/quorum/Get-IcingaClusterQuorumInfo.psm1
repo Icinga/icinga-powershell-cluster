@@ -1,0 +1,7 @@
+function Get-IcingaClusterQuorumInfo() 
+{
+    param (
+        
+    );
+    
+}
