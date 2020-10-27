@@ -15,3 +15,4 @@ Please ensure that you will escape the `@` if you are configuring it on the Icin
 To test thresholds with different input values, you can use the Framework Cmdlet `Get-IcingaHelpThresholds`.
 
 * [Invoke-IcingaCheckClusterNetwork](plugins/01-Invoke-IcingaCheckClusterNetwork.md)
+* [Invoke-IcingaCheckSharedVolume](plugins/02-Invoke-IcingaCheckSharedVolume.md)
