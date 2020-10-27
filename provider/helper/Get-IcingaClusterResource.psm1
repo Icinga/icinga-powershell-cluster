@@ -7,6 +7,10 @@
 
     * Root\MSCluster
     * Root\Cimv2
+
+    ### Cluster Permissions
+
+    * Read-Only access on cluster ressources
 .OUTPUTS
     System.Hashtable
 .LINK
