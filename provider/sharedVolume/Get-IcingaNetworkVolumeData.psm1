@@ -39,7 +39,7 @@ function Get-IcingaNetworkVolumeData()
     }
 
     try {
-        Get-ClusterSharedVolumeState -ErrorAction Stop;
+        Get-ClusterSharedVolumeState -ErrorAction Stop | Out-Null;
     } catch {
         Exit-IcingaThrowException `
             -CustomMessage 'Cluster Shared Volume: Permission denied' `
@@ -62,7 +62,7 @@ function Get-IcingaNetworkVolumeData()
     };
 
     foreach ($volume in $GetSharedVolume) {
-        $SharedVolumeState = Get-ClusterSharedVolume -Name $volume.Name | Get-ClusterSharedVolumeState;    
+        $SharedVolumeState = Get-ClusterSharedVolume -Name $volume.Name | Get-ClusterSharedVolumeState;
         $details           = @{
             'OwnerNode'        = @{};
             'SharedVolumeInfo' = @{
