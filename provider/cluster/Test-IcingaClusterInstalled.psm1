@@ -1,26 +1,20 @@
 <#
 .SYNOPSIS
-    Tests if the ClusSvc service is installed which indicates if the Failover
-    Cluster is installed on the system without requiring administrative privileges
+    Tests if the Failover-Cluster windows feature is installed on the system without requiring administrative privileges
 .DESCRIPTION
-    Tests if the ClusSvc service is installed which indicates if the Failover
-    Cluster is installed on the system without requiring administrative privileges
+    Tests if the Failover-Cluster windows feature is installed on the system without requiring administrative privileges
 .OUTPUTS
-    System.Boolean | Throws an Icinga Exception
+    System.Boolean
 .LINK
     https://github.com/Icinga/icinga-powershell-cluster
 #>
 function Test-IcingaClusterInstalled()
 {
-    $service = Get-Service -Name 'ClusSvc' -ErrorAction SilentlyContinue;
-
-    if ($null -eq $service) {
-        Exit-IcingaThrowException -ExceptionType 'Custom' -CustomMessage 'Cluster not installed' -InputString 'The Cluster feature is not installed on this system.' -Force;
+    if (Test-IcingaFunction 'Get-WindowsFeature') {
+        if ((Get-WindowsFeature -Name Failover-Clustering).Installed) {
+            return $TRUE;
+        }
     }
 
-    if ($service.Status -ne $ProviderEnums.ServiceStatus.Running) {
-        return $FALSE;
-    }
-
-    return $TRUE;
+    return $FALSE;
 }

@@ -57,7 +57,7 @@ function Invoke-IcingaCheckClusterNetwork()
     $ClusterNetInfo = Get-IcingaClusterNetworkData -IncludeClusterInterface $IncludeClusterInterface -ExcludeClusterInterface $ExcludeClusterInterface;
 
     # Check Whether or not the cluster Service is Running, otherwise we can't get any infos about the cluster
-    if ($ClusterNetInfo.Count -ne 0) {
+    if ($ClusterNetInfo.ContainsKey('Exception') -eq $FALSE) {
         foreach ($ClusterNet in $ClusterNetInfo.Keys) {
             $GetClusterNet         = $ClusterNetInfo[$ClusterNet];
             # Create CheckPackages for each individual Cluster Networks
@@ -110,12 +110,19 @@ function Invoke-IcingaCheckClusterNetwork()
             $CheckPackage.AddCheck($NetworkCheckPackage);
         }
     } else {
+        $IcingaCheck = 'Cluster Health: ';
+        if ($TestIcingaWindowsInfoEnums.NotSpecifiedExceptionOptionsText.ContainsKey([string]$ClusterNetInfo.Exception)) {
+            $IcingaCheck = ([string]::Format('Exception: {0}', $TestIcingaWindowsInfoEnums.NotSpecifiedExceptionOptionsText[$ClusterNetInfo.Exception]));
+        } else {
+            $IcingaCheck += $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfoText[[int]$ClusterNetInfo.Exception];
+        }
+
         # Enforce the checks to critical in case the cluster service should be stopped
         $CheckPackage.AddCheck(
             (
                 New-IcingaCheck `
-                    -Name 'Cluster Health' `
-                    -Value 'The Cluster Service is Stopped'
+                    -Name $IcingaCheck `
+                    -NoPerfData
             ).SetCritical()
         );
     }

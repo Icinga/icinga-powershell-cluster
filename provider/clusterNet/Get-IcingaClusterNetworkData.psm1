@@ -26,11 +26,48 @@ function Get-IcingaClusterNetworkData()
     );
 
     if (-Not (Test-IcingaClusterInstalled)) {
-        return  @{ };
+        Exit-IcingaThrowException -ExceptionType 'Custom' -CustomMessage 'Cluster not installed' -InputString 'The Cluster feature is not installed on this system.' -Force;
     }
 
+    # Check whether MSCluster_Network exists on the targeted system
+    $TestClasses = Test-IcingaWindowsInformation -ClassName MSCluster_Network -NameSpace 'Root\MSCluster';
+    # We return a empty hashtable if for some reason no data from the WMI classes can be retrieved
+    if ($TestClasses -eq $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.NotSpecified -or ($TestClasses -eq $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.PermissionError) -or ($TestIcingaWindowsInfoEnums.NotSpecifiedExceptionOptionsText.ContainsKey([string]$TestClasses))) {
+        return @{'Exception' = $TestClasses; };
+    }
+
+    # Throw an exception when the exception ID is not OK, NotSpecified and PermissionError
+    if ($TestClasses -ne $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.Ok) {
+        Exit-IcingaThrowException `
+            -CustomMessage ($TestIcingaWindowsInfoEnums.TestIcingaWindowsInfoExceptionType[[int]$TestClasses]) `
+            -InputString ($TestIcingaWindowsInfoEnums.TestIcingaWindowsInfoText[[int]$TestClasses]) `
+            -ExceptionType Custom `
+            -Force;
+    }
+
+    # Check whether or not MSCluster_NetworkInterface exists on the targeted system
+    $TestClasses = Test-IcingaWindowsInformation -ClassName MSCluster_NetworkInterface -NameSpace 'Root\MSCluster';
+    # We return a empty hashtable if for some reason no data from the WMI classes can be retrieved
+    if ($TestClasses -eq $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.NotSpecified -or ($TestClasses -eq $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.PermissionError) -or ($TestIcingaWindowsInfoEnums.NotSpecifiedExceptionOptionsText.ContainsKey([string]$TestClasses))) {
+        return @{'Exception' = @{
+                'ErrorId' = $TestClasses;
+            }
+        };
+    }
+
+    # Throw an exception when the exception ID is not OK, NotSpecified and PermissionError
+    if ($TestClasses -ne $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.Ok) {
+        Exit-IcingaThrowException `
+            -CustomMessage ($TestIcingaWindowsInfoEnums.TestIcingaWindowsInfoExceptionType[[int]$TestClasses]) `
+            -InputString ($TestIcingaWindowsInfoEnums.TestIcingaWindowsInfoText[[int]$TestClasses]) `
+            -ExceptionType Custom `
+            -Force;
+    }
+
+    # Get some basic infos to cluster network
     $GetClusterNetInfos     = Get-IcingaWindowsInformation -ClassName MSCluster_Network -Namespace 'Root\MSCluster';
     $GetClusterNetInterface = Get-IcingaWindowsInformation -ClassName MSCluster_NetworkInterface -Namespace 'Root\MSCluster';
+
     $ClusterNetData         = @{ };
     $details                = @{
         'Caption'           = $GetClusterNetInfos.Caption;

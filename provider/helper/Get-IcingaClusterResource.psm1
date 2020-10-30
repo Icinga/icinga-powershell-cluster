@@ -18,6 +18,23 @@
 #>
 function Get-IcingaClusterResource()
 {
+    # Check whether or not MSCluster_Resource exists on the targeted system
+    $TestClasses = Test-IcingaWindowsInformation -ClassName MSCluster_Resource -NameSpace 'Root\MSCluster';
+    # We return a empty hashtable if for some reason no data from the WMI classes can be retrieved
+    if ($TestClasses -eq $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.NotSpecified -or ($TestClasses -eq $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.PermissionError) -or ($TestIcingaWindowsInfoEnums.NotSpecifiedExceptionOptionsText.ContainsKey([string]$TestClasses))) {
+        return @{'Exception' = $TestClasses; };
+    }
+
+    # Throw an exception when the exception ID is not OK, NotSpecified and PermissionError
+    if ($TestClasses -ne $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.Ok) {
+        Exit-IcingaThrowException `
+            -CustomMessage ($TestIcingaWindowsInfoEnums.TestIcingaWindowsInfoExceptionType[[int]$TestClasses]) `
+            -InputString ($TestIcingaWindowsInfoEnums.TestIcingaWindowsInfoText[[int]$TestClasses]) `
+            -ExceptionType Custom `
+            -Force;
+    }
+
+    # Get some basic infos to cluster resources
     $ClusterResources = Get-IcingaWindowsInformation -ClassName MSCluster_Resource -Namespace 'Root\MSCluster';
     $ClusterData      = @{ };
 

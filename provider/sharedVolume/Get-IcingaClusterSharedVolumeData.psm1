@@ -23,6 +23,10 @@ function Get-IcingaClusterSharedVolumeData()
         [array]$ExcludeVolumes = @()
     );
 
+    if (-Not (Test-IcingaClusterInstalled)) {
+        Exit-IcingaThrowException -ExceptionType 'Custom' -CustomMessage 'Cluster not installed' -InputString 'The Cluster feature is not installed on this system.' -Force;
+    }
+
     if (-Not (Test-IcingaFunction 'Get-ClusterSharedVolume')) {
         Exit-IcingaThrowException `
             -CustomMessage 'Cmdlet "Get-ClusterSharedVolume" not found' `
@@ -32,10 +36,6 @@ function Get-IcingaClusterSharedVolumeData()
                 (New-IcingaNewLine),
                 '"Get-ClusterSharedVolume" is only available on Windows Server 2012 and later.'
             ));
-    }
-
-    if (-Not (Test-IcingaClusterInstalled)) {
-        return @{ };
     }
 
     try {
@@ -60,6 +60,10 @@ function Get-IcingaClusterSharedVolumeData()
     $ClusterDetails           = @{
         'Resources' = @{ };
     };
+
+    if ($null -eq $GetClusterResource -or $null -eq $GetSharedVolume) {
+        return @{ };
+    }
 
     foreach ($volume in $GetSharedVolume) {
         $SharedVolumeState = Get-ClusterSharedVolume -Name $volume.Name | Get-ClusterSharedVolumeState;
