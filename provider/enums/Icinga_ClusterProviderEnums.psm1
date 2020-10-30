@@ -317,7 +317,26 @@
     'Normal'      = 0;
     'Isolated'    = 1;
     'Quarantined' = 2;
-}    
+}
+
+<######################################################################################################
+################################### /lib/cluster/Testing/Classes ######################################
+######################################################################################################>
+
+[hashtable]$ClusterExceptionState= @{
+    'RestartingOrStopped' = '0x80070046';
+    'ServiceStopped'      = '0x800706d9';
+}
+
+[hashtable]$ClusterExceptionIds= @{
+    '0x80070046' = 'RestartingOrStopped';
+    '0x800706d9' = 'ServiceStopped';
+}
+
+[hashtable]$ClusterExceptionMessages = @{
+    '0x80070046' = 'The Cluster Service is Stopped or is being restarted';
+    '0x800706d9' = 'The Cluster Service is Stopped or your cluster is not running properly';
+}
 
 [hashtable]$ClusterProviderEnums = @{
     # /lib/provider/clusterNet
@@ -339,16 +358,20 @@
     ClusterServiceState                      = $ClusterServiceState;
     ClusterServiceStateName                  = $ClusterServiceStateName;
     #/lib/provider/cluster
-    ClusterNodeState                       = $ClusterNodeState;
-    ClusterNodeStateName                   = $ClusterNodeStateName;
-    ClusterNodeDedicated                   = $ClusterNodeDedicated;
-    ClusterNodeStatusInfo                  = $ClusterNodeStatusInfo;
-    ClusterNodeStatusInfoName              = $ClusterNodeStatusInfoName;
-    ClusterNodeDedicatedName               = $ClusterNodeDedicatedName;
-    ClusterNodeDrainStatus                 = $ClusterNodeDrainStatus;
-    ClusterNodeDrainStatusName             = $ClusterNodeDrainStatusName; 
-    ClusterPowerManagementCapabilities     = $ClusterPowerManagementCapabilities;
-    ClusterPowerManagementCapabilitiesName = $ClusterPowerManagementCapabilitiesName;
+    ClusterNodeState                         = $ClusterNodeState;
+    ClusterNodeStateName                     = $ClusterNodeStateName;
+    ClusterNodeDedicated                     = $ClusterNodeDedicated;
+    ClusterNodeStatusInfo                    = $ClusterNodeStatusInfo;
+    ClusterNodeStatusInfoName                = $ClusterNodeStatusInfoName;
+    ClusterNodeDedicatedName                 = $ClusterNodeDedicatedName;
+    ClusterNodeDrainStatus                   = $ClusterNodeDrainStatus;
+    ClusterNodeDrainStatusName               = $ClusterNodeDrainStatusName;
+    ClusterPowerManagementCapabilities       = $ClusterPowerManagementCapabilities;
+    ClusterPowerManagementCapabilitiesName   = $ClusterPowerManagementCapabilitiesName;
+    # /lib/cluster/Testing/Classes
+    ClusterExceptionState                    = $ClusterExceptionState;
+    ClusterExceptionIds                      = $ClusterExceptionIds;
+    ClusterExceptionMessages                 = $ClusterExceptionMessages;
 }
 
 Export-ModuleMember -Variable @('ClusterProviderEnums');

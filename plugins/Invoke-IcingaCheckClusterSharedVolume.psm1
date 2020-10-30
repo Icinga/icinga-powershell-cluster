@@ -87,10 +87,10 @@ function Invoke-IcingaCheckClusterSharedVolume()
     # Create a main CheckPackage under which all other checks will be placed
     $CheckPackage         = New-IcingaCheckPackage -Name 'Network Volumes Package' -OperatorAnd -Verbose $Verbosity;
     $ResourceCheckPackage = New-IcingaCheckPackage -Name 'Cluster Resource Package' -OperatorAnd -Verbose $Verbosity;
-    $GetVolumes           = Get-IcingaNetworkVolumeData -IncludeVolumes $IncludeVolumes -ExcludeVolumes $ExcludeVolumes;
+    $GetVolumes           = Get-IcingaClusterSharedVolumeData -IncludeVolumes $IncludeVolumes -ExcludeVolumes $ExcludeVolumes;
 
     # Test Whether or not the cluster Service is Running, otherwise we can't get any infos about the cluster
-    if ($GetVolumes.Count -ne 0) {
+    if ($GetVolumes.ContainsKey('Exception') -eq $FALSE) {
         # We go through all keys, which have fetched us from the provider
         foreach ($volume in $GetVolumes.Keys) {
             $VolumeObj          = $GetVolumes[$volume];
@@ -226,12 +226,19 @@ function Invoke-IcingaCheckClusterSharedVolume()
             $CheckPackage.AddCheck($ResourceCheckPackage);
         }
     } else {
+        $IcingaCheck = 'Cluster Health: ';
+        if ($ClusterProviderEnums.ClusterExceptionIds.ContainsKey($GetVolumes.Exception)) {
+            $IcingaCheck = ([string]::Format('Exception: {0}', $ClusterProviderEnums.ClusterExceptionMessages[$GetVolumes.Exception]));
+        } else {
+            $IcingaCheck += $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfoText[[int]$GetVolumes.Exception];
+        }
+
         # Enforce the checks to critical in case the cluster service should be stopped
         $CheckPackage.AddCheck(
             (
                 New-IcingaCheck `
-                    -Name 'Cluster Health Check' `
-                    -Value 'The Cluster Service is Stopped'
+                    -Name $IcingaCheck `
+                    -NoPerfData
             ).SetCritical()
         );
     }

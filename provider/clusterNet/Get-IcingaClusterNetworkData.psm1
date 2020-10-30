@@ -26,11 +26,61 @@ function Get-IcingaClusterNetworkData()
     );
 
     if (-Not (Test-IcingaClusterInstalled)) {
-        return  @{ };
+        Exit-IcingaThrowException -ExceptionType 'Custom' -CustomMessage 'Cluster not installed' -InputString 'The Cluster feature is not installed on this system.' -Force;
     }
 
+    # Check whether MSCluster_Network exists on the targeted system
+    $TestClasses  = Test-IcingaWindowsInformation -ClassName MSCluster_Network -NameSpace 'Root\MSCluster';
+    # Check for error Ids with Binary operators
+    $BitWiseCheck = Test-IcingaBinaryOperator -Value $TestClasses -Compare NotSpecified, PermissionError -Namespace $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo;
+    # Get the lasth throw exception id
+    $ExceptionId  = Get-IcingaLastExceptionId;
+    # We return a empty hashtable if for some reason no data from the WMI classes can be retrieved
+    if ($BitWiseCheck) {
+        return @{'Exception' = $TestClasses; };
+    }
+
+    if ($ClusterProviderEnums.ClusterExceptionIds.ContainsKey($ExceptionId)) {
+        return @{'Exception' = $ExceptionId; };
+    }
+
+    # Throw an exception when the exception ID is not OK, NotSpecified and PermissionError
+    if ($TestClasses -ne $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.Ok) {
+        Exit-IcingaThrowException `
+            -CustomMessage ($TestIcingaWindowsInfoEnums.TestIcingaWindowsInfoExceptionType[[int]$TestClasses]) `
+            -InputString ($TestIcingaWindowsInfoEnums.TestIcingaWindowsInfoText[[int]$TestClasses]) `
+            -ExceptionType Custom `
+            -Force;
+    }
+
+    # Check whether or not MSCluster_NetworkInterface exists on the targeted system
+    $TestClasses = Test-IcingaWindowsInformation -ClassName MSCluster_NetworkInterface -NameSpace 'Root\MSCluster';
+    # Check for error Ids with Binary operators
+    $BitWiseCheck = Test-IcingaBinaryOperator -Value $TestClasses -Compare NotSpecified, PermissionError -Namespace $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo;
+    # Get the lasth throw exception id
+    $ExceptionId  = Get-IcingaLastExceptionId;
+    # We return a empty hashtable if for some reason no data from the WMI classes can be retrieved
+    if ($BitWiseCheck) {
+        return @{'Exception' = $TestClasses; };
+    }
+
+    if ($ClusterProviderEnums.ClusterExceptionIds.ContainsKey($ExceptionId)) {
+        return @{'Exception' = $ExceptionId; };
+    }
+
+    # Throw an exception when the exception ID is not OK, NotSpecified and PermissionError
+    if ($TestClasses -ne $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.Ok) {
+        Exit-IcingaThrowException `
+            -CustomMessage ($TestIcingaWindowsInfoEnums.TestIcingaWindowsInfoExceptionType[[int]$TestClasses]) `
+            -InputString ($TestIcingaWindowsInfoEnums.TestIcingaWindowsInfoText[[int]$TestClasses]) `
+            -ExceptionType Custom `
+            -Force;
+    }
+
+    # Get some basic infos to cluster network
     $GetClusterNetInfos     = Get-IcingaWindowsInformation -ClassName MSCluster_Network -Namespace 'Root\MSCluster';
     $GetClusterNetInterface = Get-IcingaWindowsInformation -ClassName MSCluster_NetworkInterface -Namespace 'Root\MSCluster';
+
     $ClusterNetData         = @{ };
     $details                = @{
         'Caption'           = $GetClusterNetInfos.Caption;
