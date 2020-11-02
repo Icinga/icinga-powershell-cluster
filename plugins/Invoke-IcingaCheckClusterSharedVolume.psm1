@@ -34,7 +34,7 @@
     1: Only services with not OK will be printed including OK checks of affected check packages including Package config
     2: Everything will be printed regardless of the check state
 .EXAMPLE
-    PS> icinga { Invoke-IcingaCheckSharedVolume -Verbosity 2 }
+    PS> icinga { Invoke-IcingaCheckClusterSharedVolume -Verbosity 2 }
     [OK] Check package "Network Volumes Package" (Match All)
     \_ [OK] Check package "Cluster Resource Package" (Match All)
        \_ [OK] Cluster Disk 1 Status: Online
@@ -72,7 +72,7 @@
     https://github.com/Icinga/icinga-powershell-framework
     https://github.com/Icinga/icinga-powershell-cluster
 #>
-function Invoke-IcingaCheckSharedVolume()
+function Invoke-IcingaCheckClusterSharedVolume()
 {
     param(
         [array]$IncludeVolumes = @(),
