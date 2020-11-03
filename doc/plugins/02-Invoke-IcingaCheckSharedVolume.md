@@ -1,5 +1,5 @@
 
-# Invoke-IcingaCheckSharedVolume
+# Invoke-IcingaCheckClusterSharedVolume
 
 ## Description
 
@@ -40,7 +40,7 @@ To execute this plugin you will require to grant the following user permissions.
 ### Example Command 1
 
 ```powershell
-icinga { Invoke-IcingaCheckSharedVolume -Verbosity 2 }
+icinga { Invoke-IcingaCheckClusterSharedVolume -Verbosity 2 }
 ```
 
 ### Example Output 1
