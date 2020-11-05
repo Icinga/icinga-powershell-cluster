@@ -141,8 +141,8 @@ function Invoke-IcingaCheckClusterHealth()
         }
     } else {
         $IcingaCheck = 'Cluster Health: ';
-        if ($TestIcingaWindowsInfoEnums.NotSpecifiedExceptionOptionsText.ContainsKey([string]$ClusterServiceInfo.Exception)) {
-            $IcingaCheck = ([string]::Format('Exception: {0}', $TestIcingaWindowsInfoEnums.NotSpecifiedExceptionOptionsText[$ClusterServiceInfo.Exception]));
+        if ($ClusterProviderEnums.ClusterExceptionIds.ContainsKey($ClusterServiceInfo.Exception)) {
+            $IcingaCheck = ([string]::Format('Exception: {0}', $ClusterProviderEnums.ClusterExceptionMessages[$ClusterServiceInfo.Exception]));
         } else {
             $IcingaCheck += $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfoText[[int]$ClusterServiceInfo.Exception];
         }
