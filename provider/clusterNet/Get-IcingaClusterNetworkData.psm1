@@ -30,10 +30,18 @@ function Get-IcingaClusterNetworkData()
     }
 
     # Check whether MSCluster_Network exists on the targeted system
-    $TestClasses = Test-IcingaWindowsInformation -ClassName MSCluster_Network -NameSpace 'Root\MSCluster';
+    $TestClasses  = Test-IcingaWindowsInformation -ClassName MSCluster_Network -NameSpace 'Root\MSCluster';
+    # Check for error Ids with Binary operators
+    $BitWiseCheck = Test-IcingaBinaryOperator -Value $TestClasses -Compare NotSpecified, PermissionError -Namespace $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo;
+    # Get the lasth throw exception id
+    $ExceptionId  = Get-IcingaLastExceptionId;
     # We return a empty hashtable if for some reason no data from the WMI classes can be retrieved
-    if ($TestClasses -eq $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.NotSpecified -or ($TestClasses -eq $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.PermissionError) -or ($TestIcingaWindowsInfoEnums.NotSpecifiedExceptionOptionsText.ContainsKey([string]$TestClasses))) {
+    if ($BitWiseCheck) {
         return @{'Exception' = $TestClasses; };
+    }
+
+    if ($ClusterProviderEnums.ClusterExceptionIds.ContainsKey([string]$ExceptionId)) {
+        return @{'Exception' = $ExceptionId; };
     }
 
     # Throw an exception when the exception ID is not OK, NotSpecified and PermissionError
@@ -47,12 +55,17 @@ function Get-IcingaClusterNetworkData()
 
     # Check whether or not MSCluster_NetworkInterface exists on the targeted system
     $TestClasses = Test-IcingaWindowsInformation -ClassName MSCluster_NetworkInterface -NameSpace 'Root\MSCluster';
+    # Check for error Ids with Binary operators
+    $BitWiseCheck = Test-IcingaBinaryOperator -Value $TestClasses -Compare NotSpecified, PermissionError -Namespace $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo;
+    # Get the lasth throw exception id
+    $ExceptionId  = Get-IcingaLastExceptionId;
     # We return a empty hashtable if for some reason no data from the WMI classes can be retrieved
-    if ($TestClasses -eq $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.NotSpecified -or ($TestClasses -eq $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.PermissionError) -or ($TestIcingaWindowsInfoEnums.NotSpecifiedExceptionOptionsText.ContainsKey([string]$TestClasses))) {
-        return @{'Exception' = @{
-                'ErrorId' = $TestClasses;
-            }
-        };
+    if ($BitWiseCheck) {
+        return @{'Exception' = $TestClasses; };
+    }
+
+    if ($ClusterProviderEnums.ClusterExceptionIds.ContainsKey([string]$ExceptionId)) {
+        return @{'Exception' = $ExceptionId; };
     }
 
     # Throw an exception when the exception ID is not OK, NotSpecified and PermissionError

@@ -23,9 +23,17 @@ function Get-IcingaClusterInfo()
     # Check whether or not MSCluster_Node on the targeted system exists
     $TestClasses = Test-IcingaWindowsInformation -ClassName MSCluster_Node -NameSpace 'Root\MSCluster';
 
+    # Check for error Ids with Binary operators
+    $BitWiseCheck = Test-IcingaBinaryOperator -Value $TestClasses -Compare NotSpecified, PermissionError -Namespace $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo;
+    # Get the lasth throw exception id
+    $ExceptionId  = Get-IcingaLastExceptionId;
     # We return a empty hashtable if for some reason no data from the WMI classes can be retrieved
-    if ($TestClasses -eq $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.NotSpecified -or ($TestClasses -eq $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfo.PermissionError) -or ($TestIcingaWindowsInfoEnums.NotSpecifiedExceptionOptionsText.ContainsKey([string]$TestClasses))) {
-        return @{ 'Exception' = $TestClasses; };
+    if ($BitWiseCheck) {
+        return @{'Exception' = $TestClasses; };
+    }
+
+    if ($ClusterProviderEnums.ClusterExceptionIds.ContainsKey([string]$ExceptionId)) {
+        return @{'Exception' = $ExceptionId; };
     }
 
     # Throw an exception when the exception ID is not OK, NotSpecified and PermissionError
