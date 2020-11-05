@@ -55,7 +55,7 @@ function Invoke-IcingaCheckClusterHealth()
     $ClusterServiceInfo = Get-IcingaClusterInfo;
 
     # Test Whether or not the cluster Service is Running, otherwise we can't get any infos about the cluster
-    if ($ClusterServiceInfo.Count -ne 0) {
+    if ($ClusterServiceInfo.ContainsKey('Exception') -eq $FALSE) {
         # Create CheckPackages and get cluster infos from the provider
         $ResourceCheckPackage     = New-IcingaCheckPackage -Name 'Cluster Resources' -OperatorAnd -Verbose $Verbosity;
         $ClusterNodesCheckPackage = New-IcingaCheckPackage -Name 'Cluster Nodes' -OperatorAnd -Verbose $Verbosity;
@@ -140,12 +140,19 @@ function Invoke-IcingaCheckClusterHealth()
             $CheckPackage.AddCheck($ClusterNodesCheckPackage);
         }
     } else {
+        $IcingaCheck = 'Cluster Health: ';
+        if ($ClusterProviderEnums.ClusterExceptionIds.ContainsKey($ClusterServiceInfo.Exception)) {
+            $IcingaCheck = ([string]::Format('Exception: {0}', $ClusterProviderEnums.ClusterExceptionMessages[$ClusterServiceInfo.Exception]));
+        } else {
+            $IcingaCheck += $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfoText[[int]$ClusterServiceInfo.Exception];
+        }
+
         # Enforce the checks to critical in case the cluster service should be stopped
         $CheckPackage.AddCheck(
             (
                 New-IcingaCheck `
-                    -Name 'Cluster Health' `
-                    -Value 'The Cluster Service is Stopped'
+                    -Name $IcingaCheck `
+                    -NoPerfData
             ).SetCritical()
         );
     }
