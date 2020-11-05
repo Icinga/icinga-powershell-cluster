@@ -111,7 +111,7 @@ function Invoke-IcingaCheckClusterNetwork()
         }
     } else {
         $IcingaCheck = 'Cluster Health: ';
-        if ($ClusterProviderEnums.ClusterExceptionIds.ContainsKey([string]$ClusterNetInfo.Exception)) {
+        if ($ClusterProviderEnums.ClusterExceptionIds.ContainsKey($ClusterNetInfo.Exception)) {
             $IcingaCheck = ([string]::Format('Exception: {0}', $ClusterProviderEnums.ClusterExceptionMessages[$ClusterNetInfo.Exception]));
         } else {
             $IcingaCheck += $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfoText[[int]$ClusterNetInfo.Exception];

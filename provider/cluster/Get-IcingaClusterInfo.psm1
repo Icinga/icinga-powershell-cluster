@@ -32,7 +32,7 @@ function Get-IcingaClusterInfo()
         return @{'Exception' = $TestClasses; };
     }
 
-    if ($ClusterProviderEnums.ClusterExceptionIds.ContainsKey([string]$ExceptionId)) {
+    if ($ClusterProviderEnums.ClusterExceptionIds.ContainsKey($ExceptionId)) {
         return @{'Exception' = $ExceptionId; };
     }
 

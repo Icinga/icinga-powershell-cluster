@@ -227,7 +227,7 @@ function Invoke-IcingaCheckClusterSharedVolume()
         }
     } else {
         $IcingaCheck = 'Cluster Health: ';
-        if ($ClusterProviderEnums.ClusterExceptionIds.ContainsKey([string]$GetVolumes.Exception)) {
+        if ($ClusterProviderEnums.ClusterExceptionIds.ContainsKey($GetVolumes.Exception)) {
             $IcingaCheck = ([string]::Format('Exception: {0}', $ClusterProviderEnums.ClusterExceptionMessages[$GetVolumes.Exception]));
         } else {
             $IcingaCheck += $TestIcingaWindowsInfoEnums.TestIcingaWindowsInfoText[[int]$GetVolumes.Exception];
