@@ -80,102 +80,106 @@ function Get-IcingaClusterNetworkData()
     # Get some basic infos to cluster network
     $GetClusterNetInfos     = Get-IcingaWindowsInformation -ClassName MSCluster_Network -Namespace 'Root\MSCluster';
     $GetClusterNetInterface = Get-IcingaWindowsInformation -ClassName MSCluster_NetworkInterface -Namespace 'Root\MSCluster';
-
     $ClusterNetData         = @{ };
-    $details                = @{
-        'Caption'           = $GetClusterNetInfos.Caption;
-        'InstallDate'       = $GetClusterNetInfos.InstallDate;
-        'Status'            = $GetClusterNetInfos.Status;
-        'Flags'             = $GetClusterNetInfos.Flags;
-        'Characteristics'   = $GetClusterNetInfos.Characteristics;
-        'Name'              = $GetClusterNetInfos.Name;
-        'ID'                = $GetClusterNetInfos.ID;
-        'Description'       = $GetClusterNetInfos.Description;
-        'Address'           = $GetClusterNetInfos.Address;
-        'AddressMask'       = $GetClusterNetInfos.AddressMask;
-        'Role'              = $GetClusterNetInfos.Role;
-        'State'             = $GetClusterNetInfos.State;
-        'IPv6Addresses'     = $GetClusterNetInfos.IPv6Addresses;
-        'IPv6PrefixLengths' = $GetClusterNetInfos.IPv6PrefixLengths;
-        'IPv4Addresses'     = $GetClusterNetInfos.IPv4Addresses;
-        'IPv4PrefixLengths' = $GetClusterNetInfos.IPv4PrefixLengths;
-        'Metric'            = $GetClusterNetInfos.Metric;
-        'AutoMetric'        = $GetClusterNetInfos.AutoMetric;
-        'PrivateProperties' = $GetClusterNetInfos.PrivateProperties;
-        'Interface'         = @{};
-    };
 
-    foreach ($item in $GetClusterNetInterface) {
-        if ($IncludeClusterInterface.Count -ne 0) {
-            if ($IncludeClusterInterface.Contains($item.Name) -eq $FALSE) {
-                continue;
-            }
-        }
-
-        if ($ExcludeClusterInterface.Count -ne 0) {
-            if ($ExcludeClusterInterface.Contains($item.Name) -eq $TRUE) {
-                continue;
-            }
-        }
-
-        $Interface = @{
-            'Caption'                     = $item.Caption;
-            'Status'                      = $item.Status;
-            'InstallDate'                 = $item.InstallDate;
-            'SystemCreationClassName'     = $item.SystemCreationClassName;
-            'SystemName'                  = $item.SystemName;
-            'CreationClassName'           = $item.CreationClassName;
-            'DeviceID'                    = $item.DeviceID;
-            'PowerManagementSupported'    = $item.PowerManagementSupported;
-            'PowerManagementCapabilities' = $item.PowerManagementCapabilities;
-            'Availability'                = $item.Availability;
-            'ConfigManagerErrorCode'      = $item.ConfigManagerErrorCode;
-            'ConfigManagerUserConfig'     = $item.ConfigManagerUserConfig;
-            'PNPDeviceID'                 = $item.PNPDeviceID;
-            'StatusInfo'                  = $item.StatusInfo;
-            'LastErrorCode'               = $item.LastErrorCode;
-            'ErrorDescription'            = $item.ErrorDescription;
-            'ErrorCleared'                = $item.ErrorCleared;
-            'OtherIdentifyingInfo'        = $item.OtherIdentifyingInfo;
-            'PowerOnHours'                = $item.PowerOnHours;
-            'TotalPowerOnHours'           = $item.TotalPowerOnHours;
-            'IdentifyingDescriptions'     = $item.IdentifyingDescriptions;
-            'Name'                        = $item.Name;
-            'Description'                 = $item.Description;
-            'Adapter'                     = $item.Adapter;
-            'AdapterId'                   = $item.AdapterId;
-            'Node'                        = $item.Node;
-            'Address'                     = $item.Address;
-            'Network'                     = $item.Network;
-            'State'                       = $item.State;
-            'Flags'                       = $item.Flags;
-            'Characteristics'             = $item.Characteristics;
-            'IPv6Addresses'               = $item.IPv6Addresses;
-            'IPv4Addresses'               = $item.IPv4Addresses;
-            'DhcpEnabled'                 = $item.DhcpEnabled;
-            'PrivateProperties'           = $item.PrivateProperties;
-            'Id'                          = $item.Id;
+    foreach ($clusternetwork in $GetClusterNetInfos) {
+        $details                = @{
+            'Caption'           = $clusternetwork.Caption;
+            'InstallDate'       = $clusternetwork.InstallDate;
+            'Status'            = $clusternetwork.Status;
+            'Flags'             = $clusternetwork.Flags;
+            'Characteristics'   = $clusternetwork.Characteristics;
+            'Name'              = $clusternetwork.Name;
+            'ID'                = $clusternetwork.ID;
+            'Description'       = $clusternetwork.Description;
+            'Address'           = $clusternetwork.Address;
+            'AddressMask'       = $clusternetwork.AddressMask;
+            'Role'              = $clusternetwork.Role;
+            'State'             = $clusternetwork.State;
+            'IPv6Addresses'     = $clusternetwork.IPv6Addresses;
+            'IPv6PrefixLengths' = $clusternetwork.IPv6PrefixLengths;
+            'IPv4Addresses'     = $clusternetwork.IPv4Addresses;
+            'IPv4PrefixLengths' = $clusternetwork.IPv4PrefixLengths;
+            'Metric'            = $clusternetwork.Metric;
+            'AutoMetric'        = $clusternetwork.AutoMetric;
+            'PrivateProperties' = $clusternetwork.PrivateProperties;
+            'Interface'         = @{};
         };
 
-        if ($details.Name -eq $item.Network) {
+        foreach ($item in $GetClusterNetInterface) {
+            if ($IncludeClusterInterface.Count -ne 0) {
+                if ($IncludeClusterInterface.Contains($item.Name) -eq $FALSE) {
+                    continue;
+                }
+            }
+
+            if ($ExcludeClusterInterface.Count -ne 0) {
+                if ($ExcludeClusterInterface.Contains($item.Name) -eq $TRUE) {
+                    continue;
+                }
+            }
+
+            if ($clusternetwork.Name -ne $item.Network) {
+                continue;
+            }
+
+            $Interface = @{
+                'Caption'                     = $item.Caption;
+                'Status'                      = $item.Status;
+                'InstallDate'                 = $item.InstallDate;
+                'SystemCreationClassName'     = $item.SystemCreationClassName;
+                'SystemName'                  = $item.SystemName;
+                'CreationClassName'           = $item.CreationClassName;
+                'DeviceID'                    = $item.DeviceID;
+                'PowerManagementSupported'    = $item.PowerManagementSupported;
+                'PowerManagementCapabilities' = $item.PowerManagementCapabilities;
+                'Availability'                = $item.Availability;
+                'ConfigManagerErrorCode'      = $item.ConfigManagerErrorCode;
+                'ConfigManagerUserConfig'     = $item.ConfigManagerUserConfig;
+                'PNPDeviceID'                 = $item.PNPDeviceID;
+                'StatusInfo'                  = $item.StatusInfo;
+                'LastErrorCode'               = $item.LastErrorCode;
+                'ErrorDescription'            = $item.ErrorDescription;
+                'ErrorCleared'                = $item.ErrorCleared;
+                'OtherIdentifyingInfo'        = $item.OtherIdentifyingInfo;
+                'PowerOnHours'                = $item.PowerOnHours;
+                'TotalPowerOnHours'           = $item.TotalPowerOnHours;
+                'IdentifyingDescriptions'     = $item.IdentifyingDescriptions;
+                'Name'                        = $item.Name;
+                'Description'                 = $item.Description;
+                'Adapter'                     = $item.Adapter;
+                'AdapterId'                   = $item.AdapterId;
+                'Node'                        = $item.Node;
+                'Address'                     = $item.Address;
+                'Network'                     = $item.Network;
+                'State'                       = $item.State;
+                'Flags'                       = $item.Flags;
+                'Characteristics'             = $item.Characteristics;
+                'IPv6Addresses'               = $item.IPv6Addresses;
+                'IPv4Addresses'               = $item.IPv4Addresses;
+                'DhcpEnabled'                 = $item.DhcpEnabled;
+                'PrivateProperties'           = $item.PrivateProperties;
+                'Id'                          = $item.Id;
+            };
+
             $details.Interface.Add($item.Name, $Interface);
+
+            Write-IcingaConsoleDebug -Message ([string]::Format(
+                    'Cluster Interface {0}: ConfigManagerErrorCode: {1}.',
+                    $item.Name,
+                    $ClusterProviderEnums.ClusterInterConfigManagerErrorCode[[int]$item.ConfigManagerErrorCode]
+                )
+            );
+
+            Write-IcingaConsoleDebug -Message ([string]::Format('Cluster Interface {0}: Availability : {1}',
+                    $item.Name,
+                    $ClusterProviderEnums.ClusterInterfaceAvailabilityDebug[[int]$item.Availability]
+                )
+            );
         }
 
-        Write-IcingaConsoleDebug -Message ([string]::Format(
-                'Cluster Interface {0}: ConfigManagerErrorCode: {1}.',
-                $item.Name,
-                $ClusterProviderEnums.ClusterInterConfigManagerErrorCode[[int]$item.ConfigManagerErrorCode]
-            )
-        );
-
-        Write-IcingaConsoleDebug -Message ([string]::Format('Cluster Interface {0}: Availability : {1}',
-                $item.Name,
-                $ClusterProviderEnums.ClusterInterfaceAvailabilityDebug[[int]$item.Availability]
-            )
-        );
+        $ClusterNetData.Add($clusternetwork.Name, $details);
     }
-
-    $ClusterNetData.Add($details.Name, $details);
 
     return $ClusterNetData;
 }

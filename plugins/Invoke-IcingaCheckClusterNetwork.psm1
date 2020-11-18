@@ -102,11 +102,6 @@ function Invoke-IcingaCheckClusterNetwork()
 
             # Add Interface CheckPackage to the ClusterNetwork Package to which it belongs
             $NetworkCheckPackage.AddCheck($InterfaceCheckPackage);
-        }
-
-        # Check whether we added a Cluster Network Checks
-        # if not we don't have to add the empty check to the main CheckPackage
-        if ($NetworkCheckPackage.HasChecks()) {
             $CheckPackage.AddCheck($NetworkCheckPackage);
         }
     } else {
