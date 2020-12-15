@@ -65,7 +65,7 @@ function Invoke-IcingaCheckClusterHealth()
         $CheckPackage.AddCheck(
             (
                 New-IcingaCheck `
-                    -Name ([string]::Format('{0} Status', $GetClusServices.Values.metadata.ServiceName)) `
+                    -Name 'Cluster Service Status' `
                     -Value $GetClusServices.Values.configuration.Status.raw `
                     -Translation $ProviderEnums.ServiceStatusName
             ).CritIfNotMatch(
