@@ -21,9 +21,10 @@
     Disables the performance data output of this plugin.
 .PARAMETER Verbosity
     Changes the behavior of the plugin output which check states are printed:
-    0 (default): Only services checks/packages with state not OK will be printed.
-    1: Only services with not OK will be printed including OK checks of affected check packages including Package config.
-    2: Everything will be printed regardless of the check state.
+    0 (default): Only service checks/packages with state not OK will be printed
+    1: Only services with not OK will be printed including OK checks of affected check packages including Package config
+    2: Everything will be printed regardless of the check state
+    3: Identical to Verbose 2, but prints in addition the check package configuration e.g (All must be [OK])
 .EXAMPLE
     PS> Invoke-IcingaCheckClusterNetwork -Verbosity 2
     [OK] Check package "Cluster Network Package" (Match All)
@@ -47,12 +48,12 @@ function Invoke-IcingaCheckClusterNetwork()
         [array]$IncludeClusterInterface = @(),
         [array]$ExcludeClusterInterface = @(),
         [switch]$NoPerfData             = $FALSE,
-        [ValidateSet(0, 1, 2)]
+        [ValidateSet(0, 1, 2, 3)]
         $Verbosity                      = 0
     );
 
     # Create a main CheckPackage under which all other checks will be placed
-    $CheckPackage   = New-IcingaCheckPackage -Name 'Cluster Network Package' -OperatorAnd -Verbose $Verbosity;
+    $CheckPackage   = New-IcingaCheckPackage -Name 'Cluster Network Package' -OperatorAnd -Verbose $Verbosity -AddSummaryHeader;
     # We obtain all necessary information for the Cluster Network from the provider
     $ClusterNetInfo = Get-IcingaClusterNetworkData -IncludeClusterInterface $IncludeClusterInterface -ExcludeClusterInterface $ExcludeClusterInterface;
 

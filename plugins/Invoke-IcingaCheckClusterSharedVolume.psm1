@@ -22,10 +22,12 @@
 .PARAMETER ExcludeVolumes
     Used to Filter out which Cluster Shared Volumes you don't want to check, provided you have
     several SharedVolumes on your system. Example ('Cluster disk 2').
-.PARAMETER FreeSpaceWarning
-    Used to specify a Warning threshold for the SharedVolume free space in %. Example (10)
-.PARAMETER FreeSpaceCritical
-    Used to specify a Critical threshold for the SharedVolume free space in %. Example (5)
+.PARAMETER SpaceWarning
+    Used to specify a Warning threshold for the SharedVolume, either in % or as byte unit
+    Example: 10% or 10GB
+.PARAMETER SpaceCritical
+    Used to specify a Critical threshold for the SharedVolume, either in % or as byte unit
+    Example: 10% or 10GB
 .PARAMETER NoPerfData
     Disables the performance data output of this plugin
 .PARAMETER Verbosity
@@ -33,6 +35,7 @@
     0 (default): Only service checks/packages with state not OK will be printed
     1: Only services with not OK will be printed including OK checks of affected check packages including Package config
     2: Everything will be printed regardless of the check state
+    3: Identical to Verbose 2, but prints in addition the check package configuration e.g (All must be [OK])
 .EXAMPLE
     PS> icinga { Invoke-IcingaCheckClusterSharedVolume -Verbosity 2 }
     [OK] Check package "Network Volumes Package" (Match All)
@@ -41,7 +44,7 @@
        \_ [OK] Storage Qos Resource Status: Online
     \_ [OK] Check package "SharedVolume Cluster Disk 2" (Match All)
        \_ [OK] Cluster Disk 2 Fault State: NoFaults
-       \_ [OK] Cluster Disk 2 FreeSpace: 89.06%
+       \_ [OK] Cluster Disk 2 Used Space: 245GB
        \_ [OK] Cluster Disk 2 RedirectedAccess: False
        \_ [OK] Cluster Disk 2 State: Online
        \_ [OK] Check package "Members" (Match All)
@@ -55,7 +58,7 @@
         \_ [OK] Cluster Disk 2 StateInfo: Direct
     \_ [OK] Check package "SharedVolume Cluster Disk 3" (Match All)
        \_ [OK] Cluster Disk 3 Fault State: NoFaults
-       \_ [OK] Cluster Disk 3 FreeSpace: 89.06%
+       \_ [OK] Cluster Disk 3 Used Space: 245GB
        \_ [OK] Cluster Disk 3 RedirectedAccess: False
        \_ [OK] Cluster Disk 3 State: Online
        \_ [OK] Check package "Members" (Match All)
@@ -67,7 +70,7 @@
           \_ [OK] Cluster Disk 3 Block RedirectedIOReason: NotBlockRedirected
           \_ [OK] Cluster Disk 3 FileSystem RedirectedIOReason: NotFileSystemRedirected
           \_ [OK] Cluster Disk 3 StateInfo: Direct
-    | 'cluster_disk_2_freespace'=89.06%;;;0;100 'storage_qos_resource_status'=2;3;4 'cluster_disk_1_status'=2;3;4 'cluster_disk_3_freespace'=89.06%;;;0;100
+    | 'cluster_disk_2_used_space'=245000000000B;;; 'storage_qos_resource_status'=2;3;4 'cluster_disk_1_status'=2;3;4 'cluster_disk_3_used_space'=245000000000B;;;
 .LINK
     https://github.com/Icinga/icinga-powershell-framework
     https://github.com/Icinga/icinga-powershell-cluster
@@ -77,15 +80,15 @@ function Invoke-IcingaCheckClusterSharedVolume()
     param(
         [array]$IncludeVolumes = @(),
         [array]$ExcludeVolumes = @(),
-        $FreeSpaceWarning      = $null,
-        $FreeSpaceCritical     = $null,
+        $SpaceWarning          = $null,
+        $SpaceCritical          = $null,
         [switch]$NoPerfData    = $FALSE,
-        [ValidateSet(0, 1, 2)]
+        [ValidateSet(0, 1, 2, 3)]
         $Verbosity             = 0
     );
 
     # Create a main CheckPackage under which all other checks will be placed
-    $CheckPackage         = New-IcingaCheckPackage -Name 'Network Volumes Package' -OperatorAnd -Verbose $Verbosity;
+    $CheckPackage         = New-IcingaCheckPackage -Name 'Network Volumes Package' -OperatorAnd -Verbose $Verbosity -AddSummaryHeader;
     $ResourceCheckPackage = New-IcingaCheckPackage -Name 'Cluster Resource Package' -OperatorAnd -Verbose $Verbosity;
     $GetVolumes           = Get-IcingaClusterSharedVolumeData -IncludeVolumes $IncludeVolumes -ExcludeVolumes $ExcludeVolumes;
 
@@ -143,13 +146,14 @@ function Invoke-IcingaCheckClusterSharedVolume()
                 $VolumeCheckPackage.AddCheck(
                     (
                         New-IcingaCheck `
-                            -Name ([string]::Format('{0} FreeSpace', $volume)) `
-                            -Value $VolumeObj.SharedVolumeInfo.Partition.PercentFree `
-                            -Unit '%'
+                            -Name ([string]::Format('{0} Used Space', $volume)) `
+                            -Value $VolumeObj.SharedVolumeInfo.Partition.UsedSpace `
+                            -Unit 'B' `
+                            -BaseUnit $VolumeObj.SharedVolumeInfo.Partition.Size
                     ).WarnOutOfRange(
-                        $FreeSpaceWarning
+                        $SpaceWarning
                     ).CritOutOfRange(
-                        $FreeSpaceCritical
+                        $SpaceCritical
                     )
                 );
 
