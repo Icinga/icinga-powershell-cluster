@@ -15,6 +15,10 @@
     ### Cluster Permissions
 
     * Read-Only access on cluster ressource
+.PARAMETER WarningState
+    Allows to specify for which node state the check will throw a warning
+.PARAMETER CriticalState
+    Allows to specify for which node state the check will throw a critical
 .PARAMETER NoPerfData
     Disables the performance data output of this plugin
 .PARAMETER Verbosity
@@ -46,9 +50,13 @@
 function Invoke-IcingaCheckClusterHealth()
 {
     param (
-        [switch]$NoPerfData = $FALSE,
+        [ValidateSet('Unknown', 'Up', 'Down', 'Paused', 'Joining')]
+        [array]$WarningState  = @(),
+        [ValidateSet('Unknown', 'Up', 'Down', 'Paused', 'Joining')]
+        [array]$CriticalState = @(),
+        [switch]$NoPerfData   = $FALSE,
         [ValidateSet(0, 1, 2, 3)]
-        $Verbosity          = 0
+        $Verbosity            = 0
     );
 
     # Create a main CheckPackage under which all other checks will be placed
@@ -94,20 +102,41 @@ function Invoke-IcingaCheckClusterHealth()
                         )
                     );
 
-                    $NodeCheckPackage.AddCheck(
-                        (
-                            New-IcingaCheck `
-                                -Name ([string]::Format('#{0} State', $ClusterNode.Id)) `
-                                -Value $ClusterNode.State `
-                                -Translation $ClusterProviderEnums.ClusterNodeState `
-                        ).WarnIfMatch(
-                            $ClusterProviderEnums.ClusterNodeStateName.Unknown
-                        ).CritIfMatch(
-                            $ClusterProviderEnums.ClusterNodeStateName.Down
-                        ).CritIfMatch(
-                            $ClusterProviderEnums.ClusterNodeStateName.Paused
-                        )
-                    );
+                    $ClusterStateCheck = New-IcingaCheck `
+                        -Name ([string]::Format('#{0} State', $ClusterNode.Id)) `
+                        -Value $ClusterNode.State `
+                        -Translation $ClusterProviderEnums.ClusterNodeState;
+
+                    foreach ($entry in $WarningState) {
+                        $WarningClusterState = $ClusterProviderEnums.ClusterNodeStateName[$entry];
+                        if ($ClusterNode.State -eq $WarningClusterState) {
+                            $ClusterStateCheck.SetWarning(
+                                [string]::Format(
+                                    'Value {0} is matching values {1}',
+                                    ($ClusterProviderEnums.ClusterNodeState[$ClusterNode.State]),
+                                    [string]::Join(', ', $WarningState),
+                                    $TRUE
+                                )
+                            ) | Out-Null;
+                            break;
+                        }
+                    }
+                    foreach ($entry in $CriticalState) {
+                        $CriticalClusterState = $ClusterProviderEnums.ClusterNodeStateName[$entry];
+                        if ($ClusterNode.State -eq $CriticalClusterState) {
+                            $ClusterStateCheck.SetCritical(
+                                [string]::Format(
+                                    'Value {0} is matching values {1}',
+                                    ($ClusterProviderEnums.ClusterNodeState[$ClusterNode.State]),
+                                    [string]::Join(', ', $CriticalState),
+                                    $TRUE
+                                )
+                            ) | Out-Null;
+                            break;
+                        }
+                    }
+
+                    $NodeCheckPackage.AddCheck($ClusterStateCheck);
 
                     $ClusterNodesCheckPackage.AddCheck($NodeCheckPackage);
                 }
