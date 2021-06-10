@@ -12,6 +12,8 @@ Released closed milestones can be found on [GitHub](https://github.com/Icinga/ic
 
 ### New Plugins
 
+This release adds the following new plugins:
+
 * Invoke-IcingaCheckClusterHealth
 * Invoke-IcingaCheckClusterNetwork
 * Invoke-IcingaCheckClusterSharedVolume
