@@ -15,10 +15,16 @@
     ### Cluster Permissions
 
     * Read-Only access on cluster ressource
+.PARAMETER Exclude
+    Used to specify an array of nodes to exclude, allows '*' wildcard
+.PARAMETER Include
+    Used to specify an array of nodes to include, allows '*' wildcard
 .PARAMETER WarningState
     Allows to specify for which node state the check will throw a warning
 .PARAMETER CriticalState
     Allows to specify for which node state the check will throw a critical
+.PARAMETER SkipClusterRessource
+    Removes the Cluster Resources package from the check output if set to true
 .PARAMETER NoPerfData
     Disables the performance data output of this plugin
 .PARAMETER Verbosity
@@ -50,13 +56,16 @@
 function Invoke-IcingaCheckClusterHealth()
 {
     param (
+        [array]$Include               = @(),
+        [array]$Exclude               = @(),
         [ValidateSet('Unknown', 'Up', 'Down', 'Paused', 'Joining')]
-        [array]$WarningState  = @(),
+        [array]$WarningState          = @(),
         [ValidateSet('Unknown', 'Up', 'Down', 'Paused', 'Joining')]
-        [array]$CriticalState = @(),
-        [switch]$NoPerfData   = $FALSE,
+        [array]$CriticalState         = @(),
+        [switch]$SkipClusterRessource = $FALSE,
+        [switch]$NoPerfData           = $FALSE,
         [ValidateSet(0, 1, 2, 3)]
-        $Verbosity            = 0
+        $Verbosity                    = 0
     );
 
     # Create a main CheckPackage under which all other checks will be placed
@@ -89,6 +98,26 @@ function Invoke-IcingaCheckClusterHealth()
             if ($service -eq 'Nodes') {
                 # Iterate through all Cluster nodes and get their states
                 foreach ($node in $ClusterServiceInfo.Nodes.Keys) {
+                    $ProcessNode = $TRUE;
+
+                    foreach ($entry in $Include) {
+                        $ProcessNode = $FALSE;
+                        if ($node.ToLower() -Like $entry.ToLower()) {
+                            $ProcessNode = $TRUE;
+                            break;
+                        }
+                    }
+                    foreach ($entry in $Exclude) {
+                        if ($node.ToLower() -Like $entry.ToLower()) {
+                            $ProcessNode = $FALSE;
+                            break;
+                        }
+                    }
+
+                    if ($ProcessNode -eq $FALSE) {
+                        continue;
+                    }
+
                     $ClusterNode = $ClusterServiceInfo.Nodes[$node];
                     $NodeCheckPackage = New-IcingaCheckPackage -Name $node -OperatorAnd -Verbose $Verbosity;
                     $NodeCheckPackage.AddCheck(
@@ -141,6 +170,10 @@ function Invoke-IcingaCheckClusterHealth()
                     $ClusterNodesCheckPackage.AddCheck($NodeCheckPackage);
                 }
 
+                continue;
+            }
+
+            if ($SkipClusterRessource) {
                 continue;
             }
 
