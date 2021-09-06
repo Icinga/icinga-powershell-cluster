@@ -42,6 +42,8 @@
     https://github.com/Icinga/icinga-powershell-framework
 #>
 
+<# <#test #> #>
+
 function Invoke-IcingaCheckClusterNetwork()
 {
     param(
