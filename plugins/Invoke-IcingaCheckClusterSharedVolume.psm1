@@ -149,7 +149,7 @@ function Invoke-IcingaCheckClusterSharedVolume()
                             -Name ([string]::Format('{0} Used Space', $volume)) `
                             -Value $VolumeObj.SharedVolumeInfo.Partition.UsedSpace `
                             -Unit 'B' `
-                            -BaseUnit $VolumeObj.SharedVolumeInfo.Partition.Size
+                            -BaseValue $VolumeObj.SharedVolumeInfo.Partition.Size
                     ).WarnOutOfRange(
                         $SpaceWarning
                     ).CritOutOfRange(
