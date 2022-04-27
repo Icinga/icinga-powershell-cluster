@@ -14,6 +14,7 @@
         '.\compiled\icinga-powershell-cluster.ifw_compilation.psm1'
     )
     FunctionsToExport     = @(
+        'Import-IcingaPowerShellComponentCluster',
         'Invoke-IcingaCheckClusterHealth',
         'Invoke-IcingaCheckClusterNetwork',
         'Invoke-IcingaCheckClusterSharedVolume'
