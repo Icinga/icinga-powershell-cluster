@@ -169,6 +169,15 @@ function Invoke-IcingaCheckClusterSharedVolume()
                         'NoAccess'
                     )
                 );
+
+                $VolumeCheckPackage.AddCheck(
+                    (
+                        New-IcingaCheck `
+                            -Name ([string]::Format('{0} Partition Style', $volume)) `
+                            -Value $VolumeObj.SharedVolumeInfo.Partition.PartitionStyle `
+                            -NoPerfData
+                    ).CritIfLike('RAW')
+                );
             }
 
             # Checks for Cluster SharedVolume members, that are owned by the individual ClusterNodes

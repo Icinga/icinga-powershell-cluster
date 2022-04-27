@@ -10,6 +10,10 @@ Released closed milestones can be found on [GitHub](https://github.com/Icinga/ic
 
 [Issue and PRs](https://github.com/Icinga/icinga-powershell-cluster/milestone/2?closed=1)
 
+### Enhancements
+
+* [#28](https://github.com/Icinga/icinga-powershell-cluster/issues/28) Adds partition style monitoring to `Invoke-IcingaCheckClusterSharedVolume` and reports critical, if the style is `RAW`
+
 ### Bugfixes
 
 * [#36](https://github.com/Icinga/icinga-powershell-cluster/issues/36) Fixes `Invoke-IcingaCheckClusterSharedVolume` which does not support `%` unit for space
