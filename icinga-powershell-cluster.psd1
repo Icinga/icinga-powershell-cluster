@@ -1,5 +1,5 @@
 @{
-    ModuleVersion     = '1.0.0'
+    ModuleVersion     = '1.1.0'
     GUID              = 'e224db78-5f9a-43ea-a985-911da9da70c8'
     Author            = 'Yonas Habteab'
     CompanyName       = 'Icinga GmbH'
@@ -31,7 +31,7 @@
             ProjectUri   = 'https://github.com/Icinga/icinga-powershell-cluster'
             ReleaseNotes = 'https://github.com/Icinga/icinga-powershell-cluster/releases'
         };
-        Version  = 'v1.0.0'
+        Version  = 'v1.1.0'
         Name     = 'Windows Cluster';
         Type     = 'plugins';
         Function = '';
