@@ -53,8 +53,18 @@ function Get-IcingaClusterSharedVolumeData()
             -Force;
     }
 
-    $GetClusterResource       = Get-IcingaClusterResource;
-    $GetSharedVolume          = Get-ClusterSharedVolume;
+    $PartitionInformation    = $null;
+    $DiskInformation         = $null;
+    $GetClusterResource      = Get-IcingaClusterResource;
+    $GetSharedVolume         = Get-ClusterSharedVolume;
+    [bool]$AddPartitionStyle = $FALSE;
+
+    if ((Test-IcingaFunction -Name 'Get-Partition') -And (Test-IcingaFunction -Name 'Get-Disk')) {
+        $AddPartitionStyle    = $TRUE;
+        $PartitionInformation = Get-Partition;
+        $DiskInformation      = Get-Disk;
+    }
+
     [double]$PercentFreeSpace = 0.0;
     [array]$SharedVolumes     = @();
     $ClusterDetails           = @{
@@ -68,7 +78,7 @@ function Get-IcingaClusterSharedVolumeData()
     foreach ($volume in $GetSharedVolume) {
         $SharedVolumeState = Get-ClusterSharedVolume -Name $volume.Name | Get-ClusterSharedVolumeState;
         $details           = @{
-            'OwnerNode'        = @{};
+            'OwnerNode'        = @{ };
             'SharedVolumeInfo' = @{
                 'Partition' = @{
                     'MountPoints' = @{ };
@@ -137,6 +147,28 @@ function Get-IcingaClusterSharedVolumeData()
 
                 $details.SharedVolumeInfo.Partition.MountPoints = $item.Partition.MountPoints;
                 $PercentFreeSpace = 0.0;
+                [bool]$FoundStyle = $FALSE;
+
+                if ($AddPartitionStyle) {
+                    foreach ($partitionInfo in $PartitionInformation) {
+                        if ($partitionInfo.AccessPaths -Contains $item.Partition.Name) {
+                            foreach ($diskInfo in $DiskInformation) {
+                                if ($diskInfo.Path -eq $partitionInfo.DiskId) {
+                                    $details.SharedVolumeInfo.Partition.Add('PartitionStyle', $diskInfo.PartitionStyle);
+                                    $FoundStyle = $TRUE;
+                                    break;
+                                }
+                            }
+                        }
+                        if ($FoundStyle) {
+                            break;
+                        }
+                    }
+                }
+
+                if ($AddPartitionStyle -eq $FALSE -Or $FoundStyle -eq $FALSE) {
+                    $details.SharedVolumeInfo.Partition.Add('PartitionStyle', 'Unknown');
+                }
             }
         } else {
             $details.SharedVolumeInfo.Add('Unknown', 'Unknown');
