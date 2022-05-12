@@ -6,6 +6,14 @@ documentation before upgrading to a new release.
 
 Released closed milestones can be found on [GitHub](https://github.com/Icinga/icinga-powershell-cluster/milestones?state=closed).
 
+## 1.1.1 (2022-05-13)
+
+[Issue and PRs](https://github.com/Icinga/icinga-powershell-cluster/milestone/3?closed=1)
+
+### Bugfixes
+
+* [#40](https://github.com/Icinga/icinga-powershell-cluster/issues/40) Fixes `Get-IcingaClusterSharedVolumeData` which was not available as public function and caused Hyper-V plugins to fail, because they rely on this function inside a cluster
+
 ## 1.1.0 (2022-05-03)
 
 [Issue and PRs](https://github.com/Icinga/icinga-powershell-cluster/milestone/2?closed=1)
