@@ -17,7 +17,8 @@
         'Import-IcingaPowerShellComponentCluster',
         'Invoke-IcingaCheckClusterHealth',
         'Invoke-IcingaCheckClusterNetwork',
-        'Invoke-IcingaCheckClusterSharedVolume'
+        'Invoke-IcingaCheckClusterSharedVolume',
+        'Get-IcingaClusterSharedVolumeData'
     )
     CmdletsToExport     = @(
     )
