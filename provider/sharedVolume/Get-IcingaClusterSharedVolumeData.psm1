@@ -16,7 +16,7 @@
 .LINK
     https://github.com/Icinga/icinga-powershell-cluster
 #>
-function Get-IcingaClusterSharedVolumeData()
+function Global:Get-IcingaClusterSharedVolumeData()
 {
     param (
         [array]$IncludeVolumes = @(),
