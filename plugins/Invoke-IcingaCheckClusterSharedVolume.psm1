@@ -114,7 +114,10 @@ function Invoke-IcingaCheckClusterSharedVolume()
                             New-IcingaCheck `
                                 -Name ([string]::Format('{0} Status', $resource)) `
                                 -Value $ClusterResource.State `
-                                -Translation $ClusterProviderEnums.ClusterServiceStateName
+                                -Translation $ClusterProviderEnums.ClusterServiceStateName `
+                                -MetricIndex $resource `
+                                -MetricName 'state' `
+                                -MetricTemplate 'clustersharedvolumeresource'
                         ).WarnIfMatch(
                             $ClusterProviderEnums.ClusterServiceState.Offline
                         ).CritIfMatch(
@@ -149,7 +152,9 @@ function Invoke-IcingaCheckClusterSharedVolume()
                             -Name ([string]::Format('{0} Used Space', $volume)) `
                             -Value $VolumeObj.SharedVolumeInfo.Partition.UsedSpace `
                             -Unit 'B' `
-                            -BaseValue $VolumeObj.SharedVolumeInfo.Partition.Size
+                            -BaseValue $VolumeObj.SharedVolumeInfo.Partition.Size `
+                            -MetricIndex $volume `
+                            -MetricName 'used'
                     ).WarnOutOfRange(
                         $SpaceWarning
                     ).CritOutOfRange(
