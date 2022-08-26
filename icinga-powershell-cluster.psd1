@@ -7,8 +7,8 @@
     Description       = 'A collection of Cluster plugins for the Icinga Powershell Framework'
     PowerShellVersion = '4.0'
     RequiredModules   = @(
-        @{ModuleName = 'icinga-powershell-framework'; ModuleVersion = '1.9.0' },
-        @{ModuleName = 'icinga-powershell-plugins'; ModuleVersion = '1.5.0' }
+        @{ModuleName = 'icinga-powershell-framework'; ModuleVersion = '1.10.0' },
+        @{ModuleName = 'icinga-powershell-plugins'; ModuleVersion = '1.10.0' }
     )
     NestedModules     = @(
         '.\compiled\icinga-powershell-cluster.ifw_compilation.psm1'

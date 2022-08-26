@@ -6,6 +6,14 @@ documentation before upgrading to a new release.
 
 Released closed milestones can be found on [GitHub](https://github.com/Icinga/icinga-powershell-cluster/milestones?state=closed).
 
+## 1.2.0 (2022-08-30)
+
+[Issue and PRs](https://github.com/Icinga/icinga-powershell-cluster/milestone/4?closed=1)
+
+### Enhancements
+
+* [#43](https://github.com/Icinga/icinga-powershell-cluster/pull/43) Updates configuration and dependencies for Icinga for Windows v1.10.0
+
 ## 1.1.1 (2022-05-13)
 
 [Issue and PRs](https://github.com/Icinga/icinga-powershell-cluster/milestone/3?closed=1)
