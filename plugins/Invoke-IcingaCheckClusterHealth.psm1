@@ -85,7 +85,9 @@ function Invoke-IcingaCheckClusterHealth()
                 New-IcingaCheck `
                     -Name 'Cluster Service Status' `
                     -Value $GetClusServices.Values.configuration.Status.raw `
-                    -Translation $ProviderEnums.ServiceStatusName
+                    -Translation $ProviderEnums.ServiceStatusName `
+                    -MetricIndex 'clussvc' `
+                    -MetricName 'state'
             ).CritIfNotMatch(
                 $ProviderEnums.ServiceStatus.Running
             )
@@ -125,7 +127,9 @@ function Invoke-IcingaCheckClusterHealth()
                             New-IcingaCheck `
                                 -Name ([string]::Format('#{0} Status Information', $ClusterNode.Id)) `
                                 -Value $ClusterNode.StatusInformation `
-                                -Translation $ClusterProviderEnums.ClusterNodeStatusInfo
+                                -Translation $ClusterProviderEnums.ClusterNodeStatusInfo `
+                                -MetricIndex $ClusterNode.Id `
+                                -MetricName 'statusinfo'
                         ).CritIfMatch(
                             $ClusterProviderEnums.ClusterNodeStatusInfoName.Quarantined
                         )
@@ -134,7 +138,9 @@ function Invoke-IcingaCheckClusterHealth()
                     $ClusterStateCheck = New-IcingaCheck `
                         -Name ([string]::Format('#{0} State', $ClusterNode.Id)) `
                         -Value $ClusterNode.State `
-                        -Translation $ClusterProviderEnums.ClusterNodeState;
+                        -Translation $ClusterProviderEnums.ClusterNodeState `
+                        -MetricIndex $ClusterNode.Id `
+                        -MetricName 'state';
 
                     foreach ($entry in $WarningState) {
                         $WarningClusterState = $ClusterProviderEnums.ClusterNodeStateName[$entry];
@@ -183,7 +189,10 @@ function Invoke-IcingaCheckClusterHealth()
                     New-IcingaCheck `
                         -Name ([string]::Format('{0} Status', $service)) `
                         -Value $ClusterResource.State `
-                        -Translation $ClusterProviderEnums.ClusterServiceStateName
+                        -Translation $ClusterProviderEnums.ClusterServiceStateName `
+                        -MetricIndex $service `
+                        -MetricName 'state' `
+                        -MetricTemplate 'clusterhealthservice'
                 ).WarnIfMatch(
                     $ClusterProviderEnums.ClusterServiceState.Offline
                 ).CritIfMatch(

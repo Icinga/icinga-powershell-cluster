@@ -73,7 +73,9 @@ function Invoke-IcingaCheckClusterNetwork()
                     New-IcingaCheck `
                         -Name ([string]::Format('{0} State', $GetClusterNet.Name)) `
                         -Value $GetClusterNet.State `
-                        -Translation $ClusterProviderEnums.ClusterNetState
+                        -Translation $ClusterProviderEnums.ClusterNetState `
+                        -MetricIndex $GetClusterNet.Name `
+                        -MetricName 'state'
                 ).CritIfNotMatch(
                     $ClusterProviderEnums.ClusterNetStateName.Up
                 )
@@ -84,7 +86,9 @@ function Invoke-IcingaCheckClusterNetwork()
                     New-IcingaCheck `
                         -Name ([string]::Format('{0} Role', $GetClusterNet.Name)) `
                         -Value $GetClusterNet.Role `
-                        -Translation $ClusterProviderEnums.ClusterNetRole
+                        -Translation $ClusterProviderEnums.ClusterNetRole `
+                        -MetricIndex $GetClusterNet.Name `
+                        -MetricName 'role'
                 )
             );
 
@@ -96,7 +100,10 @@ function Invoke-IcingaCheckClusterNetwork()
                         New-IcingaCheck `
                             -Name ([string]::Format('{0} State', $interface)) `
                             -Value $ClusterInterface.State `
-                            -Translation $ClusterProviderEnums.ClusterNetState
+                            -Translation $ClusterProviderEnums.ClusterNetState `
+                            -MetricIndex $interface `
+                            -MetricName 'state' `
+                            -MetricTemplate 'clusternetworkinterface'
                     ).CritIfNotMatch(
                         $ClusterProviderEnums.ClusterNetStateName.Up
                     )

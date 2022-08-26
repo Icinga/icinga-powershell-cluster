@@ -13,6 +13,7 @@ Released closed milestones can be found on [GitHub](https://github.com/Icinga/ic
 ### Enhancements
 
 * [#43](https://github.com/Icinga/icinga-powershell-cluster/pull/43) Updates configuration and dependencies for Icinga for Windows v1.10.0
+* [#44](https://github.com/Icinga/icinga-powershell-cluster/pull/44) Adds new performance data handling for Icinga for Windows v1.10.0
 
 ## 1.1.1 (2022-05-13)
 
