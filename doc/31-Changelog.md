@@ -10,6 +10,10 @@ Released closed milestones can be found on [GitHub](https://github.com/Icinga/ic
 
 [Issue and PRs](https://github.com/Icinga/icinga-powershell-cluster/milestone/4?closed=1)
 
+### Bugfixes
+
+* [#42](https://github.com/Icinga/icinga-powershell-cluster/pull/42) Fixes missing check of state info for Cluster Shared Volume plugin, if the state info is not `Direct`
+
 ### Enhancements
 
 * [#43](https://github.com/Icinga/icinga-powershell-cluster/pull/43) Updates configuration and dependencies for Icinga for Windows v1.10.0
