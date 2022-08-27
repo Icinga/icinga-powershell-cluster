@@ -203,16 +203,18 @@ function Invoke-IcingaCheckClusterSharedVolume()
                     )
                 );
 
-                $NodeCheckPackage.AddCheck(
-                    (
-                        New-IcingaCheck `
-                            -Name ([string]::Format('{0} StateInfo', $volume)) `
-                            -Value $OwnerNode.StateInfo `
-                            -NoPerfData
-                    ).CritIfMatch(
-                        'Unavailable'
-                    )
-                );
+                $StateInfoCheck = New-IcingaCheck `
+                    -Name ([string]::Format('{0} StateInfo', $volume)) `
+                    -Value $OwnerNode.StateInfo `
+                    -NoPerfData;
+
+                $StateInfoCheck.CritIfMatch('Unavailable') | Out-Null;
+
+                if ($OwnerNode.BlockRedirectedIOReason -eq 'NoDiskConnectivity') {
+                    $StateInfoCheck.WarnIfNotMatch('Direct') | Out-Null;
+                }
+
+                $NodeCheckPackage.AddCheck($StateInfoCheck);
 
                 $NodeCheckPackage.AddCheck(
                     (
