@@ -1,4 +1,3 @@
-
 # Invoke-IcingaCheckClusterHealth
 
 ## Description
@@ -63,3 +62,5 @@ icinga { Invoke-IcingaCheckClusterHealth -Verbosity 2 }
 | 'clussvc_status'=4;;4 'clusteripadresse_status'=2;3;4 'clustername_status'=2;3;4 'task_scheduler_status'=2;3;4 '2_status_information'=0;;2 '2_state'=0;-1;2 '1_state'=0;-1;2 '1_status_information'=0;;2
 0    
 ```
+
+
