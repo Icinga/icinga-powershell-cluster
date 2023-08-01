@@ -10,7 +10,13 @@ Released closed milestones can be found on [GitHub](https://github.com/Icinga/ic
 
 [Issue and PRs](https://github.com/Icinga/icinga-powershell-cluster/milestone/5?closed=1)
 
+### Bugfixes
+
 * [#50](https://github.com/Icinga/icinga-powershell-cluster/pull/50) Fixes unwanted dependency between cluster shared volumes and shared disks
+
+### Enhancements
+
+* [#51](https://github.com/Icinga/icinga-powershell-cluster/pull/51) Updates configuration for Icinga 2.14
 
 ## 1.2.0 (2022-08-30)
 
