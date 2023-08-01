@@ -71,7 +71,7 @@ function Global:Get-IcingaClusterSharedVolumeData()
         'Resources' = @{ };
     };
 
-    if ($null -eq $GetClusterResource -or $null -eq $GetSharedVolume) {
+    if ($null -eq $GetClusterResource -and $null -eq $GetSharedVolume) {
         return @{ };
     }
 
@@ -174,18 +174,17 @@ function Global:Get-IcingaClusterSharedVolumeData()
             $details.SharedVolumeInfo.Add('Unknown', 'Unknown');
         }
 
-        foreach ($resource in $GetClusterResource.Keys) {
-            $ClusterResource = $GetClusterResource[$resource];
-            if (($ClusterResource.Type -ne 'Physical Disk' -and $ClusterResource.Type -ne 'Storage QoS Policy Manager') -or ($SharedVolumes.Contains($resource) -eq $TRUE)) {
-                continue;
-            }
-
-            $SharedVolumes += $resource;
-            $ClusterDetails.Resources.Add($resource, $ClusterResource);
-        }
-
         $ClusterDetails.Add($volume.Name, $details);
     }
 
+    foreach ($resource in $GetClusterResource.Keys) {
+        $ClusterResource = $GetClusterResource[$resource];
+        if (($ClusterResource.Type -ne 'Physical Disk' -and $ClusterResource.Type -ne 'Storage QoS Policy Manager') -or ($SharedVolumes.Contains($resource) -eq $TRUE)) {
+            continue;
+        }
+
+        $SharedVolumes += $resource;
+        $ClusterDetails.Resources.Add($resource, $ClusterResource);
+    }
     return $ClusterDetails;
 }
