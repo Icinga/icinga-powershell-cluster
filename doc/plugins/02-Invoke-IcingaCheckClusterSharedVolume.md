@@ -27,13 +27,13 @@ To execute this plugin you will require to grant the following user permissions.
 
 | Argument | Type | Required | Default | Description |
 | ---      | ---  | ---      | ---     | ---         |
-| IncludeVolumes | Array | false | @() | Used to Filter out which Cluster Shared Volumes you want to check, provided you have several SharedVolumes on your system. Example ('Cluster disk 2') |
-| ExcludeVolumes | Array | false | @() | Used to Filter out which Cluster Shared Volumes you don't want to check, provided you have several SharedVolumes on your system. Example ('Cluster disk 2'). |
-| SpaceWarning | Object | false |  | Used to specify a Warning threshold for the SharedVolume, either in % or as byte unit Example: 10% or 10GB |
-| SpaceCritical | Object | false |  | Used to specify a Critical threshold for the SharedVolume, either in % or as byte unit Example: 10% or 10GB |
+| IncludeVolumes | Array | false | @() | Used to Filter out which Cluster Shared Volumes you want to check, provided you have<br /> several SharedVolumes on your system. Example ('Cluster disk 2') |
+| ExcludeVolumes | Array | false | @() | Used to Filter out which Cluster Shared Volumes you don't want to check, provided you have<br /> several SharedVolumes on your system. Example ('Cluster disk 2'). |
+| SpaceWarning | Object | false |  | Used to specify a Warning threshold for the SharedVolume, either in % or as byte unit<br /> Example: 10% or 10GB |
+| SpaceCritical | Object | false |  | Used to specify a Critical threshold for the SharedVolume, either in % or as byte unit<br /> Example: 10% or 10GB |
 | NoPerfData | SwitchParameter | false | False | Disables the performance data output of this plugin |
-| Verbosity | Object | false | 0 | Changes the behavior of the plugin output which check states are printed: 0 (default): Only service checks/packages with state not OK will be printed 1: Only services with not OK will be printed including OK checks of affected check packages including Package config 2: Everything will be printed regardless of the check state 3: Identical to Verbose 2, but prints in addition the check package configuration e.g (All must be [OK]) |
-| ThresholdInterval | String |  |  | Change the value your defined threshold checks against from the current value to a collected time threshold of the Icinga for Windows daemon, as described [here](https://icinga.com/docs/icinga-for-windows/latest/doc/service/10-Register-Service-Checks/). An example for this argument would be 1m or 15m which will use the average of 1m or 15m for monitoring. |
+| Verbosity | Object | false | 0 | Changes the behavior of the plugin output which check states are printed:<br /> 0 (default): Only service checks/packages with state not OK will be printed<br /> 1: Only services with not OK will be printed including OK checks of affected check packages including Package config<br /> 2: Everything will be printed regardless of the check state<br /> 3: Identical to Verbose 2, but prints in addition the check package configuration e.g (All must be [OK]) |
+| ThresholdInterval | String |  |  | Change the value your defined threshold checks against from the current value to a collected time threshold of the Icinga for Windows daemon, as described [here](https://icinga.com/docs/icinga-for-windows/latest/doc/110-Installation/06-Collect-Metrics-over-Time/). An example for this argument would be 1m or 15m which will use the average of 1m or 15m for monitoring. |
 
 ## Examples
 
