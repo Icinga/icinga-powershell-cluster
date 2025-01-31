@@ -81,7 +81,7 @@ function Invoke-IcingaCheckClusterSharedVolume()
         [array]$IncludeVolumes = @(),
         [array]$ExcludeVolumes = @(),
         $SpaceWarning          = $null,
-        $SpaceCritical          = $null,
+        $SpaceCritical         = $null,
         [switch]$NoPerfData    = $FALSE,
         [ValidateSet(0, 1, 2, 3)]
         $Verbosity             = 0
