@@ -28,5 +28,5 @@ icinga> icinga { Invoke-IcingaCheckCPU -Warning 20 -Critical 40 -Core _Total -Th
 | ---         | --- |
 | [Invoke-IcingaCheckClusterHealth](plugins/03-Invoke-IcingaCheckClusterHealth.md) | Checks the state and availability of a Cluster Service |
 | [Invoke-IcingaCheckClusterSharedVolume](plugins/02-Invoke-IcingaCheckClusterSharedVolume.md) | Checks the available space on cluster Shared Volumes and additionally the availability and state of the targeted Cluster Shared Volume from each Cluster nodes. |
-| [Invoke-IcingaCheckClusterNetwork](plugins/01-Invoke-IcingaCheckClusterNetwork.md) |  Invoke-IcingaCheckClusterNetwork [[-IncludeClusterInterface] <array>] [[-ExcludeClusterInterface] <array>] [[-Verbosity] <Object>] [-NoPerfData]  |
+| [Invoke-IcingaCheckClusterNetwork](plugins/01-Invoke-IcingaCheckClusterNetwork.md) | Monitors the status of a Cluster network and its interfaces. |
 
