@@ -12,6 +12,8 @@ Released closed milestones can be found on [GitHub](https://github.com/Icinga/ic
 
 ### Enhancements
 
+* [#59](https://github.com/Icinga/icinga-powershell-cluster/issues/59) Improves `Invoke-IcingaCheckClusterNetwork` to only report own interfaces which are down as `CRITICAL`, and report the remaining as `INFO`
+
 ## 1.3.1 (tbd)
 
 [Issue and PRs](https://github.com/Icinga/icinga-powershell-cluster/milestone/7?closed=1)

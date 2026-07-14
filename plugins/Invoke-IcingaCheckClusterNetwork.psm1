@@ -65,7 +65,7 @@ function Invoke-IcingaCheckClusterNetwork()
             $NetworkCheckPackage   = New-IcingaCheckPackage -Name 'Network Package' -OperatorAnd -Verbose $Verbosity;
             $InterfaceCheckPackage = New-IcingaCheckPackage -Name ([string]::Format('Interfaces Package (Network: {0})', $ClusterNet)) -OperatorAnd -Verbose $Verbosity;
 
-            # Add ChecPackage for each Cluster Networks State
+            # Add CheckPackage for each Cluster Networks State
             $NetworkCheckPackage.AddCheck(
                 (
                     New-IcingaCheck `
@@ -93,19 +93,23 @@ function Invoke-IcingaCheckClusterNetwork()
             # Go through all available Cluster Network Interfaces and check their status
             foreach ($interface in $GetClusterNet.Interface.Keys) {
                 $ClusterInterface = $GetClusterNet.Interface[$interface];
-                $InterfaceCheckPackage.AddCheck(
-                    (
-                        New-IcingaCheck `
-                            -Name ([string]::Format('{0} State', $interface)) `
-                            -Value $ClusterInterface.State `
-                            -Translation $ClusterProviderEnums.ClusterNetState `
-                            -MetricIndex $interface `
-                            -MetricName 'state' `
-                            -MetricTemplate 'clusternetworkinterface'
-                    ).CritIfNotMatch(
+                $InterfaceCheck = New-IcingaCheck `
+                    -Name ([string]::Format('{0} State', $interface)) `
+                    -Value $ClusterInterface.State `
+                    -Translation $ClusterProviderEnums.ClusterNetState `
+                    -MetricIndex $interface `
+                    -MetricName 'state' `
+                    -MetricTemplate 'clusternetworkinterface';
+
+                # Only set the interface to critical if it belongs to ourselves
+                # Otherwise just report the status with the INFO state
+                if ($Env:ComputerName.ToLower() -eq $ClusterInterface.Node.ToLower()) {
+                    $InterfaceCheck.CritIfNotMatch(
                         $ClusterProviderEnums.ClusterNetStateName.Up
-                    )
-                );
+                    ) | Out-Null;
+                }
+
+                $InterfaceCheckPackage.AddCheck($InterfaceCheck);
             }
 
             # Add Interface CheckPackage to the ClusterNetwork Package to which it belongs
