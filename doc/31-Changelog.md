@@ -12,6 +12,8 @@ Released closed milestones can be found on [GitHub](https://github.com/Icinga/ic
 
 ### Enhancements
 
+* [#57](https://github.com/Icinga/icinga-powershell-cluster/issues/57) Improves `Invoke-IcingaCheckClusterHealth` by adding an option to Include/Exclude Cluster Resources
+
 ## 1.3.1 (tbd)
 
 [Issue and PRs](https://github.com/Icinga/icinga-powershell-cluster/milestone/7?closed=1)
