@@ -20,7 +20,7 @@ To execute this plugin you will require to grant the following user permissions.
 
 ### Cluster Permissions
 
-* Read-Only access on cluster ressource
+* Read-Only access on cluster resource
 
 ## Arguments
 
@@ -28,6 +28,8 @@ To execute this plugin you will require to grant the following user permissions.
 | ---      | ---  | ---      | ---     | ---         |
 | Include | Array | false | @() | Used to specify an array of nodes to include, allows '*' wildcard |
 | Exclude | Array | false | @() | Used to specify an array of nodes to exclude, allows '*' wildcard |
+| IncludeClusterResource | Array | false | @() | Used to specify an array of cluster resources to include, allows '*' wildcard |
+| ExcludeClusterResource | Array | false | @() | Used to specify an array of cluster resources to exclude, allows '*' wildcard |
 | WarningState | Array | false | @() | Allows to specify for which node state the check will throw a warning |
 | CriticalState | Array | false | @() | Allows to specify for which node state the check will throw a critical |
 | SkipClusterRessource | SwitchParameter | false | False | Removes the Cluster Resources package from the check output if set to true |

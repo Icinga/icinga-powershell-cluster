@@ -14,11 +14,15 @@
 
     ### Cluster Permissions
 
-    * Read-Only access on cluster ressource
+    * Read-Only access on cluster resource
 .PARAMETER Exclude
     Used to specify an array of nodes to exclude, allows '*' wildcard
 .PARAMETER Include
     Used to specify an array of nodes to include, allows '*' wildcard
+.PARAMETER ExcludeClusterResource
+    Used to specify an array of cluster resources to exclude, allows '*' wildcard
+.PARAMETER IncludeClusterResource
+    Used to specify an array of cluster resources to include, allows '*' wildcard
 .PARAMETER WarningState
     Allows to specify for which node state the check will throw a warning
 .PARAMETER CriticalState
@@ -56,16 +60,18 @@
 function Invoke-IcingaCheckClusterHealth()
 {
     param (
-        [array]$Include               = @(),
-        [array]$Exclude               = @(),
+        [array]$Include                = @(),
+        [array]$Exclude                = @(),
+        [array]$IncludeClusterResource = @(),
+        [array]$ExcludeClusterResource = @(),
         [ValidateSet('Unknown', 'Up', 'Down', 'Paused', 'Joining')]
-        [array]$WarningState          = @(),
+        [array]$WarningState           = @(),
         [ValidateSet('Unknown', 'Up', 'Down', 'Paused', 'Joining')]
-        [array]$CriticalState         = @(),
-        [switch]$SkipClusterRessource = $FALSE,
-        [switch]$NoPerfData           = $FALSE,
+        [array]$CriticalState          = @(),
+        [switch]$SkipClusterRessource  = $FALSE,
+        [switch]$NoPerfData            = $FALSE,
         [ValidateSet(0, 1, 2, 3)]
-        $Verbosity                    = 0
+        $Verbosity                     = 0
     );
 
     # Create a main CheckPackage under which all other checks will be placed
@@ -180,6 +186,10 @@ function Invoke-IcingaCheckClusterHealth()
             }
 
             if ($SkipClusterRessource) {
+                continue;
+            }
+
+            if (-not (Test-IcingaArrayFilter -InputObject $service -Include $IncludeClusterResource -Exclude $ExcludeClusterResource)) {
                 continue;
             }
 
